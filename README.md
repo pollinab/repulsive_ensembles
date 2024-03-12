@@ -11,6 +11,7 @@ $ gzip -d data/notMNIST/MNIST/raw/t10k-images-idx3-ubyte.gz
 $ python setup.py install
 $ python experiments/exp_mnist.py --n-epochs 20 --n_particles 20 --method kde --kernel laplace --functional False --adversarial True
 ```
+For more options, see 'utils/mnist_config'
 
 ## Visualization
 
