@@ -27,7 +27,7 @@ class WGD:
         self.device = device
 
 
-    def phi(self, W,X,T,step):
+    def phi(self,W,X,T,step):
         """
         Computes the update of the WGD rule
 
@@ -68,7 +68,7 @@ class WGD:
             K_ = K_W+eta*torch.eye(K_W.shape[0]).to(self.device)  
             grad_density = torch.linalg.solve(K_,grad_K)
         
-        phi = ( self.ann_schedule[step]*score_func-grad_density) 
+        phi = (self.ann_schedule[step]*score_func-grad_density)
 
 
         return phi, self.ann_schedule[step]*score_func, grad_density

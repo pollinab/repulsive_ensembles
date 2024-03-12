@@ -42,5 +42,5 @@ class Ensemble():
             pred = [self.net.forward(x, w) for w in models]
             return [torch.stack(pred)] #.unsqueeze(0)
         else:
-            pred,hidden = zip(*(list(self.net.forward(x,w)) for w in models))
+            pred, hidden = zip(*(list(self.net.forward(x,w)) for w in models))
             return torch.stack(pred), torch.stack(hidden)

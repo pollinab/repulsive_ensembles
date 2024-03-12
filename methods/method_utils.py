@@ -3,7 +3,7 @@ from math import floor
 import torch
 
 from utils.SSGE_squeeze import SpectralSteinEstimator
-from f_SVGD import f_s_SVGD
+from methods.f_SVGD import f_s_SVGD
 from utils.kernel import RBF
 from methods.SVGD import SGLD, SGD, SVGD, SVGLD
 from methods.WGD import WGD, f_WGD
@@ -71,7 +71,7 @@ def cosine_annealing(epoch, n_epochs, n_cycles, lrate_max):
     return (cos_inner)
 
 
-def create_ann(config): 
+def create_ann(config):
     if config.ann_sch == 'linear': 
         ann_sch = torch.cat([torch.linspace(0,config.gamma,config.annealing_steps),config.gamma*torch.ones(config.epochs-config.annealing_steps)]) 
     elif config.ann_sch == 'hyper': 

@@ -33,7 +33,7 @@ class SpectralSteinEstimator():
         Kxxm = self.K(x, eval_points)
         phi_x = torch.sqrt(M) * Kxxm @ eigen_vecs
 
-        phi_x *= 1. / eigen_vals[:,:,0].unsqueeze(-1)  # Take only the real part of the eigenvals
+        phi_x *= 1. / eigen_vals.unsqueeze(-1)  # Take only the real part of the eigenvals
         # as the Im is 0 (Symmetric matrix)
         return phi_x
 
@@ -51,10 +51,10 @@ class SpectralSteinEstimator():
         if self.eta is not None:
             Kxx += self.eta * torch.eye(Kxx.shape[1])
 
-        eigen_vals, eigen_vecs = zip(*[torch.eig(x,eigenvectors = True) for x in Kxx])
+        eigen_vals, eigen_vecs = zip(*[torch.linalg.eig(x) for x in Kxx])
 
-        eigen_vals = torch.stack(eigen_vals)
-        eigen_vecs = torch.stack(eigen_vecs)
+        eigen_vals = torch.stack(eigen_vals).real
+        eigen_vecs = torch.stack(eigen_vecs).real
 
         if self.num_eigs is not None:
             eigen_vals = eigen_vals[:,self.num_eigs]
@@ -68,7 +68,7 @@ class SpectralSteinEstimator():
 
         #beta = - torch.sqrt(M) * eigen_vecs.t() @ dKxx_dx_avg
         beta = - torch.sqrt(M) * torch.einsum('jki,kjm->jim',(eigen_vecs,dKxx_dx_avg))
-        beta *= 1/eigen_vals[:,:,0].unsqueeze(-1)
+        beta *= 1/eigen_vals.unsqueeze(-1)
 
         return beta, eigen_vals, eigen_vecs
 

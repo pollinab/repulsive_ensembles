@@ -125,6 +125,6 @@ class Net(nn.Module):
         if self.d_logits:
             hidden = -distance_logits
         if self.out_act is not None:
-            return self.out_act(hidden), hidden #needed so that i can use second output for training first for predict
+            return self.out_act(hidden, -1), hidden #needed so that i can use second output for training first for predict
         else:
             return hidden

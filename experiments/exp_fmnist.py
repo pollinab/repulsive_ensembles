@@ -29,7 +29,7 @@ def run():
     config = configuration()
     torch.manual_seed(config.random_seed)
     for i in range(n_runs):
-        date =  datetime.now().strftime('%H-%M-%S')
+        date = datetime.now().strftime('%H-%M-%S')
         
         if config.logit_soft == 0: 
             l_s='softmax'
