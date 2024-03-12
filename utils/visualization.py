@@ -1,7 +1,9 @@
-from torchvision.utils import make_grid
+from torchvision.utils import ImageDraw, make_grid
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def show_chosen_samples(score, data, probs=None, k=10, title=''):
   """
@@ -24,7 +26,8 @@ def show_chosen_samples(score, data, probs=None, k=10, title=''):
                                        middle_confidence_samples,
                                        low_confidence_samples,
                                        least_confidence_samples]), nrow=k)
-  plt.imshow(image_grid.permute(1, 2, 0))
+
+  plt.imshow(np.clip(image_grid, 0, 1).permute(1, 2, 0))
   plt.title(title)
   plt.show()
 
@@ -35,33 +38,33 @@ def plot_ordered_data(ensemble, data, num_classes=10, k=10):
   """
 
   with torch.no_grad():
-    data = data.reshape(len(data), -1).to(device)
+    data = data.reshape(len(data), -1)
 
-    test_pred = ensemble.forward(data)
-    Y_t = torch.mean(test_pred[0], 0)
-    std_prob_test = test_pred[0].std(0).mean(1)
+    test_pred = ensemble.forward(data.to(device))[0].detach().cpu()
+    Y_t = torch.mean(test_pred, 0)
+    std_prob_test = test_pred.std(0).mean(1)
 
     log_scale = torch.log2(torch.tensor(num_classes ,dtype=torch.float))
-    entropies_test = -torch.sum(torch.log2(Y_t + 1e-20)/log_scale * Y_t, 1).detach().cpu()
+    entropies_test = -torch.sum(torch.log2(Y_t + 1e-20)/log_scale * Y_t, 1)
 
     data = data.reshape(len(data), 1, 28, 28)
     show_chosen_samples(score=entropies_test, data=data, k=10, probs=Y_t, title='entropy')
     show_chosen_samples(score=-torch.max(Y_t, -1)[0], data=data, k=10, probs=Y_t, title='max prob')
     show_chosen_samples(score=std_prob_test, data=data, k=10, probs=Y_t, title='std')
 
-def plot_calibration(ensemble, data, labels, num_classes=10):
+def plot_calibration(ensemble, data, labels, num_classes=10, display_diagonal=False):
   """
   Plot accuracy vs confidence threshold
   """
 
   with torch.no_grad():
-    data = data.reshape(len(data), -1).to(device)
+    data = data.reshape(len(data), -1)
 
-    test_pred = ensemble.forward(data)
-    Y_t = torch.mean(test_pred[0], 0)
+    test_pred = ensemble.forward(data.to(device))
+    Y_t = torch.mean(test_pred[0], 0).detach().cpu()
 
     log_scale = torch.log2(torch.tensor(num_classes ,dtype=torch.float))
-    entropies_test = -torch.sum(torch.log2(Y_t + 1e-20)/log_scale * Y_t, 1).detach().cpu()
+    entropies_test = -torch.sum(torch.log2(Y_t + 1e-20)/log_scale * Y_t, 1)
 
     rule = torch.max(Y_t, -1)[0]
     acc = []
@@ -70,6 +73,9 @@ def plot_calibration(ensemble, data, labels, num_classes=10):
         acc.append(torch.mean((torch.argmax(Y_t, 1) == labels)[rule >= threshold]*1.))
 
     plt.plot(np.linspace(0.1, 1., 10), acc, markersize=4, c='b', marker="o")
+    if display_diagonal:
+      plt.plot(np.linspace(0.1, 1., 10), np.linspace(0.1, 1., 10), ls='--')
+   # plt.ylim([np.min(acc), 1])
     plt.title(r'Accuracy on samples where $p(y|x) \geq \tau$')
     plt.xlabel(r'Confidence threshold $\tau$')
     plt.ylabel('accuracy')
