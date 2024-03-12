@@ -2,11 +2,11 @@ import torch
 from utils.SSGE_squeeze import SpectralSteinEstimator
 from utils.kernel import RBF, Laplace, Linear
 import torch.nn.functional as F
+import numpy as np
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 ssge_k = RBF()
 ssge = SpectralSteinEstimator(0.01, None, ssge_k, device=device)
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
 
 def repulsive_term(param, kernel, method, num_models):
   if num_models == 1 or method == 'none':
@@ -32,7 +32,6 @@ def repulsive_term(param, kernel, method, num_models):
       return torch.linalg.solve(K_,grad_K)
 
 
-
 def train(ensemble, train_dataloader, config):
 
   if config.kernel == 'rbf':
@@ -42,7 +41,7 @@ def train(ensemble, train_dataloader, config):
   else:
     kernel = Linear()
   
-  num_train = len(train_loader.dataset)
+  num_train = len(train_dataloader.dataset)
   W = ensemble.particles
   optimizer = torch.optim.Adam([W], config.lr, weight_decay=0.,
                                betas=[0.9, 0.999])

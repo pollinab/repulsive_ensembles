@@ -16,7 +16,7 @@ def run():
     """Run the script.
     """
     date = datetime.now().strftime('%H-%M-%S')
-    os.makedirs('out', exist_ok=True)
+    results = []
     config = configuration()
     torch.manual_seed(config.random_seed)
 
