@@ -14,7 +14,7 @@ $ python experiments/exp_mnist.py --n-epochs 20 --n_particles 20 --method kde --
 
 ## Visualization
 
-Notebooks 'notebooks/training.ipynb' and 'notebooks/visualization.ipynb' contain training, evaluation and visualization examples on 
+Notebooks 'notebooks/training.ipynb' and 'notebooks/visualization.ipynb' contain training, evaluation and visualization examples. We experiment with test and ood data (NotMNIST, RotatedMNIST) 
 
 ## Citation
 ```
