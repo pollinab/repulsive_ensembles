@@ -15,7 +15,7 @@ For more options, see 'utils/mnist_config.py'
 
 ## Visualization
 
-Notebooks 'notebooks/training.ipynb' and 'notebooks/visualization.ipynb' contain training, evaluation and visualization examples. We experiment with test and ood data (NotMNIST, RotatedMNIST) 
+Notebooks 'notebooks/training.ipynb' and 'notebooks/visualization.ipynb' contain training, evaluation and visualization examples. We experiment with test (MNIST) and ood data (NotMNIST, RotatedMNIST) 
 
 ## Citation
 ```
