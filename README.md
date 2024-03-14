@@ -11,11 +11,13 @@ $ gzip -d data/notMNIST/MNIST/raw/t10k-images-idx3-ubyte.gz
 $ python setup.py install
 $ python experiments/exp_mnist.py --n-epochs 20 --n_particles 20 --method kde --kernel laplace --functional False --adversarial True
 ```
-For more options, see 'utils/mnist_config.py'
+For more training options, see 'utils/mnist_config.py'
+
+To train in GoogleColab see 'notebooks/training.ipynb'.
 
 ## Visualization
 
-Notebooks 'notebooks/training.ipynb' and 'notebooks/visualization.ipynb' contain training, evaluation and visualization examples. We experiment with test (MNIST) and ood data (NotMNIST, RotatedMNIST) 
+Notebooks 'notebooks/training.ipynb' and 'notebooks/visualization.ipynb' contain evaluation and visualization examples. We experiment with test (MNIST) and ood data (NotMNIST, RotatedMNIST) 
 
 ## Citation
 ```
