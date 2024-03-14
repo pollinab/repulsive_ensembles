@@ -1,6 +1,13 @@
 # Repulsive Deep Ensembles are Bayesian
 Project based on the paper [Repulsive deep ensembles are Bayesian](https://proceedings.neurips.cc/paper/2021/hash/1c63926ebcabda26b5cdb31b5cc91efb-Abstract.html)
 
+This is a forked version of the authors' repository. The functional that we added for our experiments: 
+- training pipeline -- training/train_classifier.py
+- laplace kernel -- utils/kernel.py
+- evaluation on test and ood data  -- utils/evaluation.py
+- visualization -- utils/visualization.py
+- script to run experiments -- experiments/exp_mnist.py + utils/mnist_config.py
+  
 ## MNIST experiment
 
 Training on MNIST and evaluation on NotMNIST. Example run:
